@@ -10,8 +10,8 @@ Proglab
 * Hvilke sensorer og aktuatorer vil vi bruke? 
 * Interaksjon med omgivelsene, med hjelpebotene og med folk. 
 * Hvordan skal Xboten og hjelpebotene kommunisere. 
-## Video
 
+## Video
 * Hva ønsker dere å formidle? 
 * Lag en god historie som fenger. 
 * Gi Xboten et navn. 
