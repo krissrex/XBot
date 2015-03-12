@@ -18,16 +18,16 @@ Proglab
 
 # Kalender
 
-### Uke 11 (9S13 mars):   
+### Uke 11 (9-13 mars):   
 * Bli enige om konseptet og hva Xboten og hjelpebotene skal gjøre. 
 * Valg av sensorer og aktuatorer. 
 
-### Uke 12 (16S20 mars): 
+### Uke 12 (16-20 mars): 
 * Koble opp elektronikken. 
 * Programmere oppførsel Bl Xboten og hjelpebotene. 
 * Bygge omgivelsene på A0-platen. 
 
-### Uke 13 (23S27 mars): 
+### Uke 13 (23-27 mars): 
 * Teste ut og jobbe videre med programmering og elektronikk. 
 * FerdigsBlle omgivelsene på A0-platen.
 
