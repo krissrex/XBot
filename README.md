@@ -17,20 +17,6 @@ Proglab
 * ... eller BEGGE.
 
 # Kalender
-
-_### Uke 11 (9-13 mars):   
-* Bli enige om konseptet og hva Xboten og hjelpebotene skal gjøre. 
-* Valg av sensorer og aktuatorer. 
-
-### Uke 12 (16-20 mars): 
-* Koble opp elektronikken. 
-* Programmere oppførsel Bl Xboten og hjelpebotene. 
-* Bygge omgivelsene på A0-platen. 
-
-### Uke 13 (23-27 mars): 
-* Teste ut og jobbe videre med programmering og elektronikk. 
-* FerdigsBlle omgivelsene på A0-platen.
-_
 ### (Uke 14&15: Påske)
 ### Uke 16 (13S17 april): 
 * Koble til siste bot i nettverket.
