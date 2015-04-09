@@ -32,4 +32,5 @@ Proglab
 
 
 ## Tilstandsdiagram for Xbot
+Firkantede bokser er "output", altså bare et funksjonskall som kjører, uten å bytte tilstand.
 <img src="res/XboxTilstand.png"/>
