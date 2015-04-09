@@ -9,6 +9,8 @@ Proglab
 * Hvordan skal den interagere med folk? 
  * Du kan kose med den, hvis den vil.
 
+ Se også: <a href="XBot-Spesifikasjon.md">XBot-spesifikasjon</a>
+
 
 ## Realisering
 * Hvilke sensorer og aktuatorer vil vi bruke? 
