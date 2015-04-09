@@ -29,3 +29,7 @@ Proglab
 
 ### Uke 17 (ingen øvinger): 
 * Mandag 20.04 er det sluttpresentasjon med alle videoene som Kahootkonkurranse. 
+
+
+## Tilstandsdiagram for Xbot
+<img src="res/XboxTilstand.png"/>
