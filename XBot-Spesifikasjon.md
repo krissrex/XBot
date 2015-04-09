@@ -10,6 +10,7 @@
 
 | Hva                          | Beskrivelse                                  | Pinne  |
 |------------------------------|----------------------------------------------|--------|
+| Port expander                | Gir flere porter                             |        |
 | Bluetooth (mottaker)         | BT for å få inn hvilken hjelpebot den er nær | -      |
 | Buzzer	                   | Innebygd buzzer                              | D3     |
 | Sensor array                 | IR sensor                   | D4, D5, D11, A0, A2, A3 |
