@@ -3,12 +3,18 @@ Proglab
 
 ## Brainstorming på Xbot
 * Hva skal den gjøre? 
+ * Koserobot som kjører rundt. Den kan koses med. Men hvis den har noen behov (søvn, sulten, skitten) vil den ikke koses med.
 * Hvor skal den bo? 
+ * I en jungel, omringet av en vei (teip...)
 * Hvordan skal den interagere med folk? 
+ * Du kan kose med den, hvis den vil.
+
 
 ## Realisering
 * Hvilke sensorer og aktuatorer vil vi bruke? 
+ * Touch-sensor
 * Interaksjon med omgivelsene, med hjelpebotene og med folk. 
+ * Får fra bots om den er i riktig område. Kos fra folk. Vei (teiplinje) som den kan følge.
 * Hvordan skal Xboten og hjelpebotene kommunisere. 
 
 ## Video
@@ -17,7 +23,7 @@ Proglab
 * ... eller BEGGE.
 
 # Kalender
-### (Uke 14&15: Påske)
+### (Uke 15: Påske)
 ### Uke 16 (13S17 april): 
 * Koble til siste bot i nettverket.
 * Koble til bluetooth-sensor til bluetoothbot (0), og koble den sammen med zumo.
