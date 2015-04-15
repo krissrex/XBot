@@ -247,6 +247,7 @@ void check_zones()
        motors.setSpeeds(MAX_SPEED/2,MAX_SPEED);
        
        delay(2000);
+       motors.setSpeeds(0,0);
     }  
     
 }
