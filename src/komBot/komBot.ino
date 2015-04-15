@@ -172,7 +172,7 @@ void run() {
     btSerial.write("AT+INQ\r\n"); delay(500); readIfDataBT();
     lcd.clear();
     lcd.setCursor(0,0);
-    lcd.print("Srch 17s for BT:"); myDelay(17000);
+    lcd.print("Srch 20s for BT:"); myDelay(20000);
     
     noOfBTSlavesFound = 0;
     String myString = "";
@@ -211,7 +211,7 @@ void run() {
       	btSerial.write(chars); btSerial.write("\r\n");
         lcd.clear();
         lcd.setCursor(0,0);
-      	lcd.print("Get names(5s):"); myDelay(5000);
+      	lcd.print("Get names(7s):"); myDelay(7000);
         lcd.clear();
         lcd.setCursor(0,0);
       	lcd.print("Connect to ");
@@ -240,6 +240,8 @@ void run() {
         while(next_button_status == LOW){
           next_button_status = digitalRead(btn_next);
           if (digitalRead(btn_select)==HIGH){
+            Serial.print("Selected ");
+            Serial.println(i);
             selected=i;
             made_selection = true;
             break;
@@ -280,18 +282,22 @@ void run() {
 		btSerial.write("AT+UART=9600,1,0\r\n"); delay(100); echo();
 		btSerial.write("AT+UART?\r\n"); delay(100); echo();
 
-    if (selected =! -1){
-      lcd.clear();
-      lcd.setCursor(0,0);
-      lcd.print("Paired. Wait.");
-      lcd.setCursor(0,1); 
-      lcd.print("LED should stop."); 
-    } else {
+    Serial.print("Selected ");
+    Serial.println(i);
+
+    if (selected == -1)
+    {
       lcd.clear();
       lcd.setCursor(0,0);
       lcd.print("None selected");
       lcd.setCursor(0,1);
       lcd.print("Please reboot");
+    } else {
+      lcd.clear();
+      lcd.setCursor(0,0);
+      lcd.print("Paired. Wait.");
+      lcd.setCursor(0,1); 
+      lcd.print("LED should stop.");
     }
     
 		digitalWrite(pwrPin,LOW);
