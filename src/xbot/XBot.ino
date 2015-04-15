@@ -16,10 +16,12 @@
 
 #include "NewTone.h"
 
+short sov=0,vask=0,spis=0;
+
 
 // STATES :^)
 
-enum STATE {ST_NORMAL,ST_SEARCH_LINE,ST_SEARCH_AREA,ST_KOS,ST_SINT,ST_SPIS,ST_VASK,ST_SOV};
+enum STATE {ST_NORMAL,ST_SEARCH_LINE,ST_SEARCH_AREA};
 
 // Current state
 STATE state = ST_NORMAL;
@@ -28,11 +30,13 @@ STATE state = ST_NORMAL;
 const int mcp_addr = 0;
 // port expander
 Adafruit_MCP23008 mcp;
+long long timeClock;
 
 void setup() {
     // put your setup code here, to run once:
     mcp.begin(mcp_addr);
     mcp.pinMode(3, OUTPUT);
+    timeClock=millis();
 }
 
 void loop() {
@@ -42,6 +46,25 @@ void loop() {
     delay(100);
     mcp.digitalWrite(3, LOW);
     delay(300);
+    
+    switch(state)
+    {
+      case ST_NORMAL:
+      break;
+      case ST_SEARCH_LINE:
+      break;
+      case ST_SEARCH_AREA:
+      break;
+
+    }
+    
+}
+
+void updateBehov()
+{
+  double timeNow=(millis()-timeClock)/1000.0;
+//  sov+=
+  
 }
 
 void kos(){
