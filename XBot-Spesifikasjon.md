@@ -19,9 +19,17 @@
 | Venstre motor retning        | Backend?                                     | D8            |
 | Høyre motor hastighet	       | Backend?                                     | D9            |
 | Venstre motor hastighet      | Backend?                                     | D10           |
+| BT reciever                  | Bluetooth modul                              | D2, D6        |
 
 Ledige:
 * D13	Gul LED
-* D6	Ledig
-* D2	Ledig
 * D0, D1 Rx/Tx
+
+## BT kommunikasjon
+
+| Sone | Melding |
+|------|---------|
+| Ingen|         |
+| Sov  | 1       |
+| Spis | 2       |
+| Vask | 3       |
