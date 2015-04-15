@@ -109,6 +109,7 @@ void loop() {
     switch(state)
     {
       case ST_NORMAL:
+      vanilla();
       break;
       case ST_SEARCH_LINE:
       find_line();
@@ -247,7 +248,28 @@ void check_zones()
        motors.setSpeeds(MAX_SPEED/2,MAX_SPEED);
        
        delay(2000);
+       state=ST_NORMAL;
        motors.setSpeeds(0,0);
     }  
     
+}
+int currentSpeed1=MAX_SPEED,currentSpeed2=MAX_SPEED;
+void vanilla()
+{
+   unsigned int sensors[6];
+   reflectanceSensors.readLine(sensors); 
+   
+   for(int i=0;i<6;i++)
+  {  
+    if(sensors[i]<200)
+      {
+        motors.setSpeeds(MAX_SPEED,-MAX_SPEED);
+        delay(400);
+        motors.setSpeeds(MAX_SPEED,MAX_SPEED);
+        delay(500);//for at den ikke skal se sensorene igjen med en gang
+      }
+  }
+  if(sov>=100||spis>=100||vask>=100)
+    state=ST_SEARCH_LINE;
+   
 }
