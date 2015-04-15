@@ -4,7 +4,7 @@
 #include "QTRSensors.h"
 #include "ZumoBuzzer.h"
 #include "ZumoMotors.h"
-#include "ZumoReflectanceSensorArray.h"
+//#include "ZumoReflectanceSensorArray.h"
 
 #include <SoftwareSerial.h>
 #include "PLabBTCallback.h"
@@ -18,12 +18,11 @@
 
 
 // STATES :^)
-#define ST_NORMAL 		1
-#define ST_SEARCH_LINE  2
-#define ST_SEARCH_AREA	3
+
+enum STATE {ST_NORMAL,ST_SEARCH_LINE,ST_SEARCH_AREA,ST_KOS,ST_SINT,ST_SPIS,ST_VASK,ST_SOV};
 
 // Current state
-int state = ST_NORMAL;
+STATE state = ST_NORMAL;
 
 // port expander i2c address
 const int mcp_addr = 0;
