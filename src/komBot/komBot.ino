@@ -82,7 +82,9 @@ void setup()
 void loop()
 {
   btSerial.write("1");
-	delay(3000);
+	delay(1000);
+  btSerial.write("0");
+  delay(3000);
 }
 
 
@@ -157,7 +159,7 @@ void run() {
       lcd.clear();
       lcd.setCursor(0,0);
       lcd.print("Push2start pair");
-      delay(2000);
+      delay(500);
     }
 
     btSerial.write("AT+ORGL\r\n"); delay(100); echo();
@@ -170,7 +172,7 @@ void run() {
     btSerial.write("AT+INQ\r\n"); delay(500); readIfDataBT();
     lcd.clear();
     lcd.setCursor(0,0);
-    lcd.print("Srch 20s for BT:"); myDelay(20000);
+    lcd.print("Srch 17s for BT:"); myDelay(17000);
     
     noOfBTSlavesFound = 0;
     String myString = "";
@@ -189,8 +191,9 @@ void run() {
 
     lcd.clear();
     lcd.setCursor(0,0);
-    lcd.print("Found "); lcd.write(noOfBTSlavesFound);
-    delay(1000);
+    lcd.print("Found ");
+    lcd.write(noOfBTSlavesFound+'0');
+    delay(1500);
     for (int i=0; i < noOfBTSlavesFound; i++) {
         int c1 = stringArr[i].indexOf(':');
       	int c2 = stringArr[i].indexOf(':', c1+1);
@@ -208,7 +211,7 @@ void run() {
       	btSerial.write(chars); btSerial.write("\r\n");
         lcd.clear();
         lcd.setCursor(0,0);
-      	lcd.print("Get names(10s):"); myDelay(10000);
+      	lcd.print("Get names(5s):"); myDelay(5000);
         lcd.clear();
         lcd.setCursor(0,0);
       	lcd.print("Connect to ");
@@ -229,12 +232,23 @@ void run() {
            	lcd.print(myString);
             delay(1500); 
           }
-       }
-        delay(3000);
-        if (digitalRead(btn_select)==HIGH){
-          selected=i;
+        }
+
+        delay(200);
+        bool made_selection = false;
+        int next_button_status = LOW;
+        while(next_button_status == LOW){
+          next_button_status = digitalRead(btn_next);
+          if (digitalRead(btn_select)==HIGH){
+            selected=i;
+            made_selection = true;
+            break;
+          }
+        }
+        if (made_selection){
           break;
         }
+
         lcd.setCursor(0,1);
         lcd.print("                ");
         lcd.setCursor(0,1);
@@ -265,11 +279,21 @@ void run() {
 		btSerial.write("AT+BIND?\r\n"); delay(100); echo();
 		btSerial.write("AT+UART=9600,1,0\r\n"); delay(100); echo();
 		btSerial.write("AT+UART?\r\n"); delay(100); echo();
-    lcd.clear();
-    lcd.setCursor(0,0);
-		lcd.print("Paired. Wait.");
-    lcd.setCursor(0,1); 
-		lcd.print("LED should stop."); 
+
+    if (selected =! -1){
+      lcd.clear();
+      lcd.setCursor(0,0);
+      lcd.print("Paired. Wait.");
+      lcd.setCursor(0,1); 
+      lcd.print("LED should stop."); 
+    } else {
+      lcd.clear();
+      lcd.setCursor(0,0);
+      lcd.print("None selected");
+      lcd.setCursor(0,1);
+      lcd.print("Please reboot");
+    }
+    
 		digitalWrite(pwrPin,LOW);
 		digitalWrite(keyPin,LOW);
 		delay(1000);
