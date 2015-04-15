@@ -127,7 +127,14 @@ void myDelay(int milli) {
   lcd.setCursor(0,1);
   lcd.print("                ");
   lcd.setCursor(0,1);
+  int j =0;
   for (int i = 0; i < milli; i+=500) {
+    j++;
+    if (j%16==0){
+      lcd.setCursor(0,1);
+      lcd.print("                ");
+      lcd.setCursor(0,1);
+    }
     lcd.print(".");
     delay(500);
   }
@@ -172,7 +179,7 @@ void run() {
     btSerial.write("AT+INQ\r\n"); delay(500); readIfDataBT();
     lcd.clear();
     lcd.setCursor(0,0);
-    lcd.print("Srch 20s for BT:"); myDelay(20000);
+    lcd.print("Srch 20s for BT:"); myDelay(32000);
     
     noOfBTSlavesFound = 0;
     String myString = "";
