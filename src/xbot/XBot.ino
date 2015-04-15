@@ -4,7 +4,7 @@
 #include "QTRSensors.h"
 #include "ZumoBuzzer.h"
 #include "ZumoMotors.h"
-#include "ZumoReflectanceSensorArray.h"
+//#include "ZumoReflectanceSensorArray.h"
 
 #include <SoftwareSerial.h>
 #include "PLabBTCallback.h"
@@ -16,11 +16,12 @@
 
 #include "NewTone.h"
 
+short sov=0,vask=0,spis=0;
+
 
 // STATES :^)
-#define ST_NORMAL 		1
-#define ST_SEARCH_LINE  2
-#define ST_SEARCH_AREA	3
+
+enum STATE {ST_NORMAL,ST_SEARCH_LINE,ST_SEARCH_AREA};
 
 // ZONES
 #define ZONE_NONE 0
@@ -29,7 +30,7 @@
 #define ZONE_WASH 3
 
 // Current state
-int state = ST_NORMAL;
+STATE state = ST_NORMAL;
 
 // Current zone
 int zone = ZONE_NONE;
@@ -49,6 +50,7 @@ PLabBTSerial btSerial(bt_tx, bt_rx);
 // Motors
 ZumoMotors motors;
 
+long long timeClock;
 
 void setup() {
     // put your setup code here, to run once:
@@ -57,6 +59,7 @@ void setup() {
 
     btSerial.begin(9600); // BT baud rate
 
+    timeClock=millis(); // Initial time
 }
 
 void loop() {
@@ -66,6 +69,25 @@ void loop() {
     delay(100);
     mcp.digitalWrite(3, LOW);
     delay(300);
+    
+    switch(state)
+    {
+      case ST_NORMAL:
+      break;
+      case ST_SEARCH_LINE:
+      break;
+      case ST_SEARCH_AREA:
+      break;
+
+    }
+    
+}
+
+void updateBehov()
+{
+  double timeNow=(millis()-timeClock)/1000.0;
+//  sov+=
+  
 }
 
 
