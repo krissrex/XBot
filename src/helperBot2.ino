@@ -2,6 +2,8 @@
 Den enkleste nettverksbotten, og mest sannsynlig blir det to av disse (kun bluetooth-bot og lcd-bot er to nødvendige, unike bots).
 */
 
+// ZONE 2 - SPISE-SONE
+
 #include "PLabInternet.h"
 
 //Gi denne botten senderID 2.
@@ -36,9 +38,8 @@ void loop() {
   // Regn ut avstanden
   float distance = duration * 0.00017;  
   
-  //Si ifra til LCD-bot og bluetooth-bot at zumo er funnet her om den er innen 6cm.
+  //Si ifra til komBot at zumo er funnet her om den er innen 6cm.
   if (distance < 0.06){
-    mySocket.sendMessage(1,"funnet");
     mySocket.sendMessage(0,"funnet");
     //Sett et delay for å unngå nettverksjam.
     delay(500);  
