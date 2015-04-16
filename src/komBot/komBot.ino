@@ -50,6 +50,7 @@ const int btn_select = 13;  // blue square button
 const int btn_next = 12;    // yellow round button
 
 unsigned long time = 0;
+unsigned long found[] = {0, 0, 0};
 
 PLabBTSerial btSerial(txPin, rxPin);
 
@@ -65,10 +66,10 @@ void setup()
 {
     //Om botten mottar en melding, kall myMessageHandler
 	  mySocket.onReceive(myMessageHandler);
-    Serial.begin(9600);
     //Set up buttons
     pinMode(btn_select, INPUT);
     pinMode(btn_next, INPUT);
+    pinMode(A1, OUTPUT);
 
 
     //LCD initialiseres med 16 tegn og to linjer.
@@ -82,20 +83,42 @@ void setup()
 
 void loop()
 {
+  mySocket.update();
   lcd.clear();
   lcd.setCursor(0,0);
   float run_time = (millis()-time)/1000;
   lcd.print(run_time);
   lcd.setCursor(0,1);
+
   if (digitalRead(btn_select) == HIGH){
     lcd.write("1");
     btSerial.write("1");
     delay(3000);
   }
+
+  for (int i=0; i<3; i++){
+    lcd.setCursor(5+i,1);
+    if (found[i] == 0){
+    lcd.write(" ");
+    } else {
+      if (millis()-found[i] > 3000 ){
+        found[i] = 0;
+      } else {
+        lcd.write(i+1);
+      }
+    }
+  }
+
+  /*if (found[0] == 0 && found[1] == 0 & found[2] == 0){
+    analogWrite(A0, 255);
+  } else {
+    analogWrite(A0, 0);
+  }*/
+
   lcd.setCursor(0,1);
   lcd.write("0");
   btSerial.write("0");
-  delay(1000);
+  delay(300);
 }
 
 
@@ -118,18 +141,19 @@ void btSetup(){
 //Håndterer meldinger med en gang de kommer inn via Rx. PASS PÅ AT SERIAL IKKE KALLES NOENSTEDS I KODEN.
 void myMessageHandler(byte senderID, String message) // Event handler
 {
-  //Kode for LCD- og ???sone-bot, om den melder at zumo er der.
-  if(senderID == 1 && message == "funnet"){
-    /*Send over bluetooth til zumo at den må stoppe om den leter etter stasjon 1 + handlinger deretter*/
-    btSerial.write("1");
-  }
-  //Kode for ???sone-bot, om den melder at zumo er der.
-  if(senderID == 2 && message == "funnet"){
-    btSerial.write("2");
-  }
+  analogWrite(A0, 255);
+  delay(1000);
+  analogWrite(A0, 0);
 
-  if (senderID == 3 && message == "funnet"){
-    btSerial.write("3");
+
+  if (message.equals("funnet")){
+    lcd.setCursor(4+senderID,1);
+    lcd.write(senderID+'0');
+    if (senderID<=3){
+      found[senderID-1]=millis();
+      btSerial.write(senderID+'0');
+      delay(200);
+    } 
   }
 }
 
@@ -264,8 +288,6 @@ void run() {
         while(next_button_status == LOW){
           next_button_status = digitalRead(btn_next);
           if (digitalRead(btn_select)==HIGH){
-            Serial.print("Selected ");
-            Serial.println(i);
             selected=i;
             made_selection = true;
             break;
@@ -305,9 +327,6 @@ void run() {
 		btSerial.write("AT+BIND?\r\n"); delay(100); echo();
 		btSerial.write("AT+UART=9600,1,0\r\n"); delay(100); echo();
 		btSerial.write("AT+UART?\r\n"); delay(100); echo();
-
-    Serial.print("Selected ");
-    Serial.println(i);
 
     if (selected == -1)
     {

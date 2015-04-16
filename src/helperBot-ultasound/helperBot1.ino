@@ -1,7 +1,5 @@
  /*
  Bot 1 har ansvaret være en sone.
- LCD bør utnyttes til debug under utvikling, ettersom serial ikke kan kalles pga hardware-limitasjoner med antall rx/tx-pinner.
- Ved ferdigstilling burde LCD brukes som UI 
  */
 
 // ZONE 1 - SOVE-SONE
@@ -11,7 +9,7 @@
 
 
 //Gir LCD-botten senderID 1
-PLab_Internet mySocket(1);
+PLab_Internet mySocket(2);
 //Boolean som holder styr på om en bot har funnet zumoen. Kan gjøres langt schmudere.
 boolean isFound = false;
 
