@@ -19,7 +19,7 @@
 short sov=0,vask=0,spis=0;
 
 int lastError = 0;
-const int MAX_SPEED = 400;
+const int MAX_SPEED = 150;
 // Set constants for PID control
 const float KP = 0.5;  // Proportional constant
 const float KD = 6;    // Derivative constant
@@ -94,7 +94,7 @@ delay(1000);
   }
   motors.setSpeeds(0,0);
   button.waitForButton();
-  motors.setSpeeds(50,50);
+  motors.setSpeeds(120,120);
 }
 
 void loop() {
@@ -123,7 +123,7 @@ void loop() {
 
 void updateBehov()
 {
-  double deltaTime=(millis()-timeClock)/1000.0;
+  float deltaTime=static_cast<float>((millis()-timeClock)/1000.0f);
   sov+= 4*deltaTime;
   vask+= 3*deltaTime;
   spis+= 6*deltaTime;
@@ -171,7 +171,13 @@ void sint(){
 
 void behov_sov(){
   
-sov=0;
+  sov=0;
+  NewTone(3, 440, 1000);
+for(int i=0; i<3; i++){
+  mcp.digitalWrite(3, HIGH);
+  delay(300);
+  mcp.digitalWrite(3, LOW);
+}
 delay(5000);
 }
 
@@ -188,7 +194,7 @@ delay(2500);
 
 void follow_line()
 {
-
+  int MAX_SPEED2 =400;
   unsigned int sensors[6];
 
   int pv = reflectanceSensors.readLine(sensors);
@@ -196,17 +202,17 @@ void follow_line()
   int speedDifference = KP*error + KD * (error - lastError);
  
   lastError = error;
-  int m1Speed = MAX_SPEED + speedDifference;
-  int m2Speed = MAX_SPEED - speedDifference;
+  int m1Speed = MAX_SPEED2 + speedDifference;
+  int m2Speed = MAX_SPEED2 - speedDifference;
 
   if (m1Speed < 0)
     m1Speed = 0;
   if (m2Speed < 0)
     m2Speed = 0;
-  if (m1Speed > MAX_SPEED)
-    m1Speed = MAX_SPEED;
-  if (m2Speed > MAX_SPEED)
-    m2Speed = MAX_SPEED;
+  if (m1Speed > MAX_SPEED2)
+    m1Speed = MAX_SPEED2;
+  if (m2Speed > MAX_SPEED2)
+    m2Speed = MAX_SPEED2;
 
   if(m1Speed<m2Speed)
      svingeRetning--;
@@ -224,16 +230,20 @@ reflectanceSensors.readLine(sensors);
 
 for(int i=0;i<6;i++)
   {  
-    if(sensors[i]<200)
+    if(sensors[i]>600)
       state=ST_SEARCH_AREA;
+      break;
   }
 
 }
 
 void check_zones()
 {
-  if(zone==ZONE_SLEEP&&sov>=100)
+  if(zone==ZONE_SLEEP&&sov>=100){
     behov_sov();
+  spis=0;
+  vask=0;
+  }
   else if(zone==ZONE_EAT&&spis>=100)
     behov_spis();
   else if(zone==ZONE_WASH&&vask>=100)
@@ -248,7 +258,7 @@ void check_zones()
        
        delay(2000);
        state=ST_NORMAL;
-       motors.setSpeeds(0,0);
+       motors.setSpeeds(MAX_SPEED,MAX_SPEED);
     }  
     
 }
@@ -256,17 +266,17 @@ void check_zones()
 void vanilla()
 {
    unsigned int sensors[6];
-   reflectanceSensors.readLine(sensors); 
+   reflectanceSensors.readCalibrated(sensors); 
    
    for(int i=0;i<6;i++)
   {  
-    if(sensors[i]<200)
+    if(sensors[i]>600)
       {
         motors.setSpeeds(MAX_SPEED,-MAX_SPEED);
-        delay(400);
+        delay(500);
         motors.setSpeeds(MAX_SPEED,MAX_SPEED);
-        delay(500);//for at den ikke skal se sensorene igjen med en gang
-        break;
+        //delay(800);//for at den ikke skal se sensorene igjen med en gang
+        reflectanceSensors.readCalibrated(sensors); 
       }
   }
   if(sov>=100||spis>=100||vask>=100)
