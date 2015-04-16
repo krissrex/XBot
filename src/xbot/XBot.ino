@@ -98,13 +98,15 @@ delay(1000);
 }
 
 void loop() {
+	pollBluetooth();
     // put your main code here, to run repeatedly:
+
     updateBehov();
-    NewTone(3, 440, 100);
+    /*NewTone(3, 440, 100);
     mcp.digitalWrite(3, HIGH);
     delay(100);
     mcp.digitalWrite(3, LOW);
-    delay(300);
+    delay(300);*/
     
     switch(state)
     {
@@ -157,7 +159,14 @@ void readCommand (char *text) {
   		delay(100);
   		mcp.digitalWrite(3, LOW);
   		zone = ZONE_NONE;
+  		NewTone(3, 440, 200);
   	}
+
+  	NewTone(3, 700, 200*zone);
+  	mcp.digitalWrite(3, HIGH);
+  	delay(zone*200);
+  	mcp.digitalWrite(3, LOW);
+
 }
 
 

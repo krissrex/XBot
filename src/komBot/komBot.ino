@@ -65,7 +65,7 @@ void setup()
 {
     //Om botten mottar en melding, kall myMessageHandler
 	  mySocket.onReceive(myMessageHandler);
-
+    Serial.begin(9600);
     //Set up buttons
     pinMode(btn_select, INPUT);
     pinMode(btn_next, INPUT);
@@ -81,7 +81,10 @@ void setup()
 
 void loop()
 {
-	
+  btSerial.write("1");
+	delay(1000);
+  btSerial.write("0");
+  delay(3000);
 }
 
 
@@ -121,19 +124,28 @@ void myMessageHandler(byte senderID, String message) // Event handler
 
 
 void myDelay(int milli) {
-  lcd.clear();
-
+  lcd.setCursor(0,1);
+  lcd.print("                ");
+  lcd.setCursor(0,1);
+  int j =0;
   for (int i = 0; i < milli; i+=500) {
+    j++;
+    if (j%16==0){
+      lcd.setCursor(0,1);
+      lcd.print("                ");
+      lcd.setCursor(0,1);
+    }
     lcd.print(".");
     delay(500);
-  };
-  lcd.clear();
+  }
+  lcd.setCursor(0,1);
+  lcd.print("                ");
 }
 
 void echo() {
-      lcd.setCursor(1,0);
+      lcd.setCursor(0,0);
       lcd.print("                ");
-      lcd.setCursor(1,0);
+      lcd.setCursor(0,0);
 
       lcd.print(":");
       while (btSerial.available()) {
@@ -147,14 +159,14 @@ String stringArr[10];
 int noOfBTSlavesFound = 0;
 
 void run() {
-    int buttonState = digitalRead(btn_next);
+    int buttonState = digitalRead(btn_select);
 
     while (buttonState != HIGH) {
-      buttonState = digitalRead(btn_next);
+      buttonState = digitalRead(btn_select);
       lcd.clear();
       lcd.setCursor(0,0);
       lcd.print("Push2start pair");
-      delay(2000);
+      delay(500);
     }
 
     btSerial.write("AT+ORGL\r\n"); delay(100); echo();
@@ -167,7 +179,7 @@ void run() {
     btSerial.write("AT+INQ\r\n"); delay(500); readIfDataBT();
     lcd.clear();
     lcd.setCursor(0,0);
-    lcd.print("Srch 20s for BT:"); myDelay(20000);
+    lcd.print("Srch 20s for BT:"); myDelay(32000);
     
     noOfBTSlavesFound = 0;
     String myString = "";
@@ -182,9 +194,13 @@ void run() {
     }
 
 	//  noOfBTSlavesFound--;
+    int selected = -1;
+
     lcd.clear();
     lcd.setCursor(0,0);
-    lcd.print("Found "); lcd.write(noOfBTSlavesFound);
+    lcd.print("Found ");
+    lcd.write(noOfBTSlavesFound+'0');
+    delay(1500);
     for (int i=0; i < noOfBTSlavesFound; i++) {
         int c1 = stringArr[i].indexOf(':');
       	int c2 = stringArr[i].indexOf(':', c1+1);
@@ -202,11 +218,11 @@ void run() {
       	btSerial.write(chars); btSerial.write("\r\n");
         lcd.clear();
         lcd.setCursor(0,0);
-      	lcd.print("Get names(10s):"); myDelay(10000);
+      	lcd.print("Get names(7s):"); myDelay(7000);
         lcd.clear();
         lcd.setCursor(0,0);
-      	lcd.print("BT Unit ");
-      	lcd.print(i+1); lcd.print(": ");
+      	lcd.print("Connect to ");
+      	lcd.print(i+1); lcd.print("?:");
 
       	while (btSerial.available()) {
         	int availableCount = btSerial.available();
@@ -217,29 +233,41 @@ void run() {
            	btSerial.read(text, availableCount);
            	String myString = String(text);
         	// Print the incomming data to console
-            lcd.setCursor(1,0);
+            lcd.setCursor(0,1);
             lcd.print("                ");
-            lcd.setCursor(1,0);         
+            lcd.setCursor(0,1);         
            	lcd.print(myString);
-            delay(300);   
+            delay(1500); 
           }
-       }  
+        }
+
+        delay(200);
+        bool made_selection = false;
+        int next_button_status = LOW;
+        while(next_button_status == LOW){
+          next_button_status = digitalRead(btn_next);
+          if (digitalRead(btn_select)==HIGH){
+            Serial.print("Selected ");
+            Serial.println(i);
+            selected=i;
+            made_selection = true;
+            break;
+          }
+        }
+        if (made_selection){
+          break;
+        }
+
+        lcd.setCursor(0,1);
+        lcd.print("                ");
+        lcd.setCursor(0,1);
+        lcd.print("not selected");
+        delay(300);
+
     }
 
-    if (noOfBTSlavesFound > 0) {
-      	Serial.print("Type number of BT unit to pair (1 - ");
-  		Serial.print(noOfBTSlavesFound); Serial.println("):");
+		int i = selected;
 
-      	while (!Serial.available()) { } // wait for user to type... 
-  		char c = Serial.read(); delay(500);
-
-      	while (Serial.available()) {  // wait for user to type... 
-     		char temp = Serial.read();
-      	}
-
-		int id = c - '0';
-		Serial.println(id);
-		int i = id - 1;
 		int c1 = stringArr[i].indexOf(':');
 		int c2 = stringArr[i].indexOf(':', c1+1);
 		int c3 = stringArr[i].indexOf(':', c2+1);
@@ -253,33 +281,43 @@ void run() {
 		String s = "AT+BIND="+s1+","+s2+","+s3;
 		char chars[s.length()];
 		s.toCharArray(chars,s.length()+1);
-		Serial.println(chars);
+    lcd.clear();
+    lcd.setCursor(0,0);
+		lcd.print(chars);
 		btSerial.write(chars); btSerial.write("\r\n");
 		btSerial.write("AT+BIND?\r\n"); delay(100); echo();
 		btSerial.write("AT+UART=9600,1,0\r\n"); delay(100); echo();
 		btSerial.write("AT+UART?\r\n"); delay(100); echo();
-		Serial.print("BT Unit "); 
-		Serial.print(id); 
-		Serial.println(" paired successfully. Please wait for it to connect."); 
-		Serial.println("The red LED on the slave BT unit should stop blinking"); 
+
+    Serial.print("Selected ");
+    Serial.println(i);
+
+    if (selected == -1)
+    {
+      lcd.clear();
+      lcd.setCursor(0,0);
+      lcd.print("None selected");
+      lcd.setCursor(0,1);
+      lcd.print("Please reboot");
+    } else {
+      lcd.clear();
+      lcd.setCursor(0,0);
+      lcd.print("Paired. Wait.");
+      lcd.setCursor(0,1); 
+      lcd.print("LED should stop.");
+    }
+    
 		digitalWrite(pwrPin,LOW);
 		digitalWrite(keyPin,LOW);
 		delay(1000);
 		digitalWrite(pwrPin,HIGH);
 		delay(1000);
 
-		while (Serial.available()) {
-			char c = Serial.read();
-		} // wait for user to type... 
-
+    /*
       	Serial.println("Type <enter> key to send test string STEPF to unit.");
-		while (!Serial.available()) { } // wait for user to type... 
-
-		c = Serial.read();
+		*/
 		btSerial.begin(9600);
-		Serial.println("STEPF");     
 		btSerial.write("STEPF\r\n");  
-    }
 } //end run()
 
 
