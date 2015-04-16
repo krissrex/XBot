@@ -133,8 +133,6 @@ void updateBehov()
 
 
 void pollBluetooth(){
-	int result = 0;
-
 	int availableCount = btSerial.available();
   	if (availableCount > 0) {
     	char text[availableCount];
@@ -144,6 +142,8 @@ void pollBluetooth(){
 }
 
 void readCommand (char *text) {
+  mcp.digitalWrite(3, HIGH);
+
 	if (0 == strcmp("1", text)) {
     	zone = ZONE_SLEEP;
   	} else if (0 == strcmp("2", text)) {
@@ -152,11 +152,14 @@ void readCommand (char *text) {
   		zone = ZONE_WASH;
   	} else {
   		// Blink led for unknown
+      delay(100);
+      mcp.digitalWrite(3, LOW);
+      delay(100);
   		mcp.digitalWrite(3, HIGH);
   		delay(100);
-  		mcp.digitalWrite(3, LOW);
   		zone = ZONE_NONE;
   	}
+    mcp.digitalWrite(3, LOW);
 }
 
 
@@ -173,23 +176,22 @@ void behov_sov(){
   
   sov=0;
   NewTone(3, 440, 1000);
-for(int i=0; i<3; i++){
-  mcp.digitalWrite(3, HIGH);
-  delay(300);
-  mcp.digitalWrite(3, LOW);
-}
-delay(5000);
+  for(int i=0; i<3; i++){
+    mcp.digitalWrite(3, HIGH);
+    delay(300);
+    mcp.digitalWrite(3, LOW);
+  }
+  delay(5000);
 }
 
 void behov_spis(){
-spis=0;
-delay(3000);
-  
+  spis=0;
+  delay(3000); 
 }
 
 void behov_vask(){
-vask=0;
-delay(2500);
+  vask=0;
+  delay(2500);
 }
 
 void follow_line()
@@ -224,11 +226,11 @@ void follow_line()
 
 void find_line()
 {
-unsigned int sensors[6];
-motors.setSpeeds(MAX_SPEED,MAX_SPEED);
-reflectanceSensors.readLine(sensors);
+  unsigned int sensors[6];
+  motors.setSpeeds(MAX_SPEED,MAX_SPEED);
+  reflectanceSensors.readLine(sensors);
 
-for(int i=0;i<6;i++)
+  for(int i=0;i<6;i++)
   {  
     if(sensors[i]>600)
       state=ST_SEARCH_AREA;
@@ -271,13 +273,13 @@ void vanilla()
    for(int i=0;i<6;i++)
   {  
     if(sensors[i]>600)
-      {
-        motors.setSpeeds(MAX_SPEED,-MAX_SPEED);
-        delay(500);
-        motors.setSpeeds(MAX_SPEED,MAX_SPEED);
-        //delay(800);//for at den ikke skal se sensorene igjen med en gang
-        reflectanceSensors.readCalibrated(sensors); 
-      }
+    {
+      motors.setSpeeds(MAX_SPEED,-MAX_SPEED);
+      delay(500);
+      motors.setSpeeds(MAX_SPEED,MAX_SPEED);
+      //delay(800);//for at den ikke skal se sensorene igjen med en gang
+      reflectanceSensors.readCalibrated(sensors); 
+    }
   }
   if(sov>=100||spis>=100||vask>=100)
     state=ST_SEARCH_LINE;
