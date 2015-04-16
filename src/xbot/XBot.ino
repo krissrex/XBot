@@ -105,12 +105,15 @@ void loop() {
     switch(state)
     {
       case ST_NORMAL:
+      mcp.digitalWrite(3, LOW);
       vanilla();
       break;
       case ST_SEARCH_LINE:
+      mcp.digitalWrite(3, LOW);
       find_line();
       break;
       case ST_SEARCH_AREA:
+      mcp.digitalWrite(3, HIGH);
       check_zones();
       follow_line();
 
