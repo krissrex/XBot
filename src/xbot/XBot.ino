@@ -60,7 +60,7 @@ ZumoMotors motors;
 ZumoReflectanceSensorArray reflectanceSensors;
 Pushbutton button(ZUMO_BUTTON);
 
-long long timeClock;
+unsigned long timeClock;
 
 void setup() {
     // put your setup code here, to run once:
@@ -100,12 +100,8 @@ delay(1000);
 void loop() {
     // put your main code here, to run repeatedly:
     updateBehov();
-    NewTone(3, 440, 100);
-    mcp.digitalWrite(3, HIGH);
-    delay(100);
-    mcp.digitalWrite(3, LOW);
-    delay(300);
-    
+    pollBluetooth();
+
     switch(state)
     {
       case ST_NORMAL:
@@ -253,6 +249,7 @@ void check_zones()
     }  
     
 }
+
 int currentSpeed1=MAX_SPEED,currentSpeed2=MAX_SPEED;
 void vanilla()
 {
