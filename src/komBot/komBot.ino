@@ -49,7 +49,7 @@ Pin 8  ---  VCC
 const int btn_select = 13;  // blue square button
 const int btn_next = 12;    // yellow round button
 
-
+unsigned long time = 0;
 
 PLabBTSerial btSerial(txPin, rxPin);
 
@@ -76,15 +76,26 @@ void setup()
   	
 	  btSetup(); // Setter opp bt for master
 	  run(); //kjører BT pairing
+    time = millis();
 }
 
 
 void loop()
 {
-  btSerial.write("1");
-	delay(1000);
+  lcd.clear();
+  lcd.setCursor(0,0);
+  float run_time = (millis()-time)/1000;
+  lcd.print(run_time);
+  lcd.setCursor(0,1);
+  if (digitalRead(btn_select) == HIGH){
+    lcd.write("1");
+    btSerial.write("1");
+    delay(3000);
+  }
+  lcd.setCursor(0,1);
+  lcd.write("0");
   btSerial.write("0");
-  delay(3000);
+  delay(1000);
 }
 
 
@@ -179,7 +190,7 @@ void run() {
     btSerial.write("AT+INQ\r\n"); delay(500); readIfDataBT();
     lcd.clear();
     lcd.setCursor(0,0);
-    lcd.print("Srch 20s for BT:"); myDelay(32000);
+    lcd.print("Srch 13s for BT:"); myDelay(13000);
     
     noOfBTSlavesFound = 0;
     String myString = "";
@@ -218,12 +229,13 @@ void run() {
       	btSerial.write(chars); btSerial.write("\r\n");
         lcd.clear();
         lcd.setCursor(0,0);
-      	lcd.print("Get names(7s):"); myDelay(7000);
+      	lcd.print("Get names(4s):"); myDelay(4000);
         lcd.clear();
         lcd.setCursor(0,0);
       	lcd.print("Connect to ");
       	lcd.print(i+1); lcd.print("?:");
 
+        bool firstprint=true;
       	while (btSerial.available()) {
         	int availableCount = btSerial.available();
         	if (availableCount > 0) {
@@ -233,11 +245,16 @@ void run() {
            	btSerial.read(text, availableCount);
            	String myString = String(text);
         	// Print the incomming data to console
-            lcd.setCursor(0,1);
-            lcd.print("                ");
-            lcd.setCursor(0,1);         
-           	lcd.print(myString);
-            delay(1500); 
+            if (firstprint){
+              lcd.setCursor(0,1);
+              lcd.print("                ");
+              lcd.setCursor(0,1);         
+              lcd.print(myString);
+              delay(1500);
+              firstprint=false;
+            }
+            
+            
           }
         }
 
