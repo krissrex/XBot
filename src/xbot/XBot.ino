@@ -69,8 +69,8 @@ void setup() {
 
     btSerial.begin(9600); // BT baud rate
 
-    timeClock=millis(); // Initial time
     calibrate();
+    timeClock=millis(); // Initial time
 }
 
 void calibrate()
@@ -250,7 +250,6 @@ void check_zones()
     
 }
 
-int currentSpeed1=MAX_SPEED,currentSpeed2=MAX_SPEED;
 void vanilla()
 {
    unsigned int sensors[6];
@@ -264,6 +263,7 @@ void vanilla()
         delay(400);
         motors.setSpeeds(MAX_SPEED,MAX_SPEED);
         delay(500);//for at den ikke skal se sensorene igjen med en gang
+        break;
       }
   }
   if(sov>=100||spis>=100||vask>=100)
