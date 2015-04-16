@@ -68,6 +68,7 @@ void setup() {
     mcp.pinMode(3, OUTPUT); // Blue led for testing
 
     btSerial.begin(9600); // BT baud rate
+    Serial.begin(9600);
 
     calibrate();
     timeClock=millis(); // Initial time
@@ -100,7 +101,8 @@ delay(1000);
 void loop() {
     // put your main code here, to run repeatedly:
     updateBehov();
-    pollBluetooth();
+    //pollBluetooth();
+
 
     switch(state)
     {
@@ -113,12 +115,23 @@ void loop() {
       find_line();
       break;
       case ST_SEARCH_AREA:
-      mcp.digitalWrite(3, HIGH);
+      mcp.digitalWrite(3, LOW);
+      checkLightSensor();
       check_zones();
       follow_line();
 
     }
     
+}
+
+void checkLightSensor(){
+  int light = analogRead(A1);
+  Serial.println(light);
+  if (light > 700){
+    zone = ZONE_SLEEP;
+  } else {
+    zone = ZONE_NONE;
+  }
 }
 
 void updateBehov()
@@ -180,6 +193,7 @@ void behov_sov(){
     mcp.digitalWrite(3, HIGH);
     delay(300);
     mcp.digitalWrite(3, LOW);
+    delay(300);
   }
   delay(5000);
 }
