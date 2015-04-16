@@ -92,7 +92,7 @@ delay(1000);
     // 80*20 = 1600 ms.
     delay(20);
   }
-  motors.setSpeeds(0,0);
+  motors.setSpeeds(50,50);
   
   button.waitForButton();
 }
